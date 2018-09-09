@@ -2,6 +2,8 @@ import {APIGatewayEvent, Context, Handler} from 'aws-lambda'
 import AWS, {AWSError} from 'aws-sdk'
 import {resizeImage} from 'code/resizeImage'
 
+const s3 = new AWS.S3()
+
 const getKey = ({
   key,
   width,
@@ -27,8 +29,6 @@ export const resizePhoto: Handler = async (
     const height = parseFloat(queryStringParameters.h)
     const {key} = pathParameters
 
-    const s3 = new AWS.S3()
-
     const imageStream = s3
       .getObject({
         Bucket: process.env.BUCKET,
@@ -36,14 +36,25 @@ export const resizePhoto: Handler = async (
       })
       .createReadStream()
 
-    const resizedImageStream = resizeImage({
-      imageStream,
-      width,
-      height,
-    })
     const uploadedKey = getKey({
       prefix: 'resized/',
       key,
+      width,
+      height,
+    })
+
+    if (await imageExists(uploadedKey)) {
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: `Image already exists at ${uploadedKey}`,
+          input: event,
+        }),
+      }
+    }
+
+    const resizedImageStream = resizeImage({
+      imageStream,
       width,
       height,
     })
@@ -55,15 +66,13 @@ export const resizePhoto: Handler = async (
       })
       .promise()
 
-    const response = {
+    return {
       statusCode: 200,
       body: JSON.stringify({
         message: `Image successfully uploaded as ${uploadedKey}`,
         input: event,
       }),
     }
-
-    return response
   } catch (error) {
     if (isAwsError(error)) {
       return {
@@ -83,6 +92,20 @@ export const resizePhoto: Handler = async (
         stack: error.stack,
       }),
     }
+  }
+}
+
+const imageExists = async (key: string) => {
+  try {
+    await s3
+      .headObject({
+        Bucket: process.env.BUCKET,
+        Key: key,
+      })
+      .promise()
+    return true
+  } catch {
+    return false
   }
 }
 
