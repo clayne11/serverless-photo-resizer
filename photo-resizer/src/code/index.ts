@@ -1,0 +1,1 @@
+export {resizePhoto} from './resizePhoto'

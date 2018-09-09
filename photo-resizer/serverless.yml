@@ -29,7 +29,7 @@ provider:
 
 functions:
   resizePhoto:
-    handler: src/code/handler.resizePhoto
+    handler: src/code/index.resizePhoto
     events:
       - http:
           path: resize/{key}
