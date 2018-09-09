@@ -22,10 +22,8 @@ provider:
     - Effect: Allow
       Action:
         - 's3:*'
-      # Restrict our IAM role permissions to
-      # the specific table for the stage
       Resource:
-        - 'Fn::GetAtt': [PhotoBucket, Arn]
+        - Fn::Join: ['', [Fn::GetAtt: [PhotoBucket, Arn], '/*']]
 
 functions:
   resizePhoto:

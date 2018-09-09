@@ -3,8 +3,6 @@ const slsw = require('serverless-webpack')
 
 const pathFromRoot = curPath => path.join(__dirname, curPath)
 
-console.log('--- slsw.lib.entries ---', slsw.lib.entries)
-
 module.exports = {
   context: pathFromRoot(''),
   mode: slsw.lib.webpack.isLocal ? 'development' : 'production',

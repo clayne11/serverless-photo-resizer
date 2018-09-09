@@ -14,7 +14,8 @@ export const resizePhoto: Handler = async (
     const {key} = pathParameters
 
     const s3 = new AWS.S3()
-    const imageStream = await s3
+
+    const imageStream = s3
       .getObject({
         Bucket: process.env.BUCKET,
         Key: `original/${key}`,
