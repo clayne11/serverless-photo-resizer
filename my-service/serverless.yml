@@ -12,15 +12,49 @@ provider:
   name: aws
   runtime: nodejs8.10
 
+  environment:
+    bucket:
+      Ref: PhotoBucket
+
 functions:
   hello:
     handler: handler.hello
     events:
       - http:
+          path: resize/{key}
           method: get
-          path: hello
+          request:
+            parameters:
+              paths:
+                key: true
 
 custom:
   webpack:
     packager: 'yarn'
     packagerOptions: {}
+
+resources:
+  Resources:
+    PhotoBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        # Set the CORS policy
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+
+  # Print out the name of the bucket that is created
+  Outputs:
+    PhotoBucketName:
+      Value:
+        Ref: PhotoBucket

@@ -1,15 +1,9 @@
-const path = require('path');
-const slsw = require('serverless-webpack');
-
-const entries = {};
-
-Object.keys(slsw.lib.entries).forEach(
-  key => (entries[key] = ['./source-map-install.js', slsw.lib.entries[key]])
-);
+const path = require('path')
+const slsw = require('serverless-webpack')
 
 module.exports = {
   mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
-  entry: entries,
+  entry: slsw.lib.entries,
   devtool: 'source-map',
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
@@ -23,7 +17,7 @@ module.exports = {
   module: {
     rules: [
       // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
-      { test: /\.tsx?$/, loader: 'ts-loader' },
+      {test: /\.tsx?$/, loader: 'ts-loader'},
     ],
   },
-};
+}
