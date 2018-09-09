@@ -2,6 +2,20 @@ import {APIGatewayEvent, Context, Handler} from 'aws-lambda'
 import AWS, {AWSError} from 'aws-sdk'
 import {resizeImage} from 'code/resizeImage'
 
+const getKey = ({
+  key,
+  width,
+  height,
+  prefix = '',
+}: {
+  prefix
+  key: string
+  width: number
+  height: number
+}) => {
+  return `${prefix}${key}/${width}x${height}`
+}
+
 export const resizePhoto: Handler = async (
   event: APIGatewayEvent,
   _context: Context
@@ -22,24 +36,35 @@ export const resizePhoto: Handler = async (
       })
       .createReadStream()
 
-    resizeImage({
+    const resizedImageStream = resizeImage({
       imageStream,
       width,
       height,
     })
+    const uploadedKey = getKey({
+      prefix: 'resized/',
+      key,
+      width,
+      height,
+    })
+    await s3
+      .upload({
+        Bucket: process.env.BUCKET,
+        Key: uploadedKey,
+        Body: resizedImageStream,
+      })
+      .promise()
 
     const response = {
       statusCode: 200,
       body: JSON.stringify({
-        message:
-          'Go Serverless Webpack (Typescript) v1.0! Your function executed successfully!',
+        message: `Image successfully uploaded as ${uploadedKey}`,
         input: event,
       }),
     }
 
     return response
   } catch (error) {
-    console.log('--- error ---', error)
     if (isAwsError(error)) {
       return {
         statusCode: error.statusCode,
@@ -53,8 +78,9 @@ export const resizePhoto: Handler = async (
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: 'Something went wrong',
+        message: error.message,
         input: event,
+        stack: error.stack,
       }),
     }
   }
