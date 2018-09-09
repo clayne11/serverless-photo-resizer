@@ -1,12 +1,38 @@
 const path = require('path')
 const slsw = require('serverless-webpack')
 
+const pathFromRoot = curPath => path.join(__dirname, curPath)
+
+console.log('--- slsw.lib.entries ---', slsw.lib.entries)
+
 module.exports = {
+  context: pathFromRoot(''),
   mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
   entry: slsw.lib.entries,
   devtool: 'source-map',
   resolve: {
-    extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
+    modules: [pathFromRoot('./src'), 'node_modules'],
+    extensions: [
+      '.js',
+      '.jsx',
+      '.ts',
+      '.tsx',
+      '.css',
+      '.scss',
+      '.json',
+      '.svg',
+      '.png',
+      '.jpg',
+      '.jpeg',
+      '.zip',
+      '.pdf',
+      '.tff',
+      '.woff',
+      '.woff2',
+      '.eot',
+      '.html',
+      '.yml',
+    ],
   },
   output: {
     libraryTarget: 'commonjs',

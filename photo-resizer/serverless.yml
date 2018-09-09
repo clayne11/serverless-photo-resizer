@@ -11,14 +11,25 @@ package:
 provider:
   name: aws
   runtime: nodejs8.10
+  memorySize: 1024
+  timeout: 30
 
   environment:
-    bucket:
+    BUCKET:
       Ref: PhotoBucket
 
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - 's3:*'
+      # Restrict our IAM role permissions to
+      # the specific table for the stage
+      Resource:
+        - 'Fn::GetAtt': [PhotoBucket, Arn]
+
 functions:
-  hello:
-    handler: handler.hello
+  resizePhoto:
+    handler: src/code/handler.resizePhoto
     events:
       - http:
           path: resize/{key}
@@ -32,29 +43,11 @@ custom:
   webpack:
     packager: 'yarn'
     packagerOptions: {}
+    includeModules:
+      forceExclude:
+        - aws-sdk
+        - gm
 
 resources:
-  Resources:
-    PhotoBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        # Set the CORS policy
-        CorsConfiguration:
-          CorsRules:
-            - AllowedOrigins:
-                - '*'
-              AllowedHeaders:
-                - '*'
-              AllowedMethods:
-                - GET
-                - PUT
-                - POST
-                - DELETE
-                - HEAD
-              MaxAge: 3000
-
-  # Print out the name of the bucket that is created
-  Outputs:
-    PhotoBucketName:
-      Value:
-        Ref: PhotoBucket
+  # S3
+  - ${file(resources/photo-bucket.yml)}

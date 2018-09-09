@@ -2,15 +2,17 @@
   "name": "photo-resizer",
   "version": "1.0.0",
   "description": "Serverless webpack example using Typescript",
-  "main": "handler.js",
+  "main": "src/code/handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {},
   "devDependencies": {
     "@types/aws-lambda": "8.10.1",
+    "@types/gm": "^1.18.0",
     "@types/node": "^8.0.57",
     "aws-sdk": "^2.311.0",
+    "gm": "^1.23.1",
     "serverless": "^1.30.3",
     "serverless-webpack": "^5.1.1",
     "source-map-support": "^0.5.6",
