@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "serverless deploy",
+    "build": "serverless webpack",
     "build:sharp": "cd lambda-sharp && docker run -v \"$PWD\":/var/task lambci/lambda:build-nodejs8.10 ./build.sh"
   },
   "dependencies": {
@@ -28,7 +29,8 @@
     "serverless-webpack": "^5.1.1",
     "source-map-support": "^0.5.6",
     "typescript": "^2.9.2",
-    "webpack": "^4.5.0"
+    "webpack": "^4.5.0",
+    "webpack-node-externals": "^1.7.2"
   },
   "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
   "license": "MIT"
