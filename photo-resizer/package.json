@@ -4,14 +4,25 @@
   "description": "Serverless webpack example using Typescript",
   "main": "src/code/handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "sls deploy"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ramda": "^0.25.0",
+    "sharp": "^0.20.8"
+  },
   "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-typescript": "^7.1.0",
     "@types/aws-lambda": "8.10.1",
     "@types/gm": "^1.18.0",
     "@types/node": "^8.0.57",
+    "@types/ramda": "^0.25.38",
+    "@types/sharp": "^0.17.10",
     "aws-sdk": "^2.311.0",
+    "babel-loader": "^8.0.2",
+    "babel-plugin-ramda": "^1.6.3",
     "gm": "^1.23.1",
     "serverless": "^1.30.3",
     "serverless-webpack": "^5.1.1",

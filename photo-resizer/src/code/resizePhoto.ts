@@ -1,6 +1,6 @@
 import {APIGatewayEvent, Context, Handler} from 'aws-lambda'
 import AWS, {AWSError} from 'aws-sdk'
-import {resizeImage} from 'code/resizeImage'
+import {processImage} from 'code/processImage'
 
 const s3 = new AWS.S3()
 
@@ -53,7 +53,7 @@ export const resizePhoto: Handler = async (
       }
     }
 
-    const resizedImageStream = resizeImage({
+    const resizedImageStream = processImage({
       imageStream,
       width,
       height,
