@@ -5,37 +5,6 @@ const nodeExternals = require('webpack-node-externals')
 
 const pathFromRoot = curPath => path.join(__dirname, curPath)
 
-const outputPath = path.join(__dirname, '.webpack')
-
-const SHARP_VERSION = '0.20.8'
-const sharpTarball = path.join(
-  __dirname,
-  `lambda-sharp/tarballs/sharp-${SHARP_VERSION}-aws-lambda-linux-x64-node-8.10.0.tar.gz`
-)
-
-const createExtractTarballPlugin = ({archive, to}) => {
-  return {
-    apply: compiler => {
-      compiler.hooks.afterEmit.tapAsync(
-        'SharpExtractor',
-        async (_compilation, callback) => {
-          try {
-            await decompress(path.resolve(archive), path.resolve(to))
-            callback()
-          } catch (error) {
-            console.error(
-              'Unable to extract archive ',
-              archive,
-              to,
-              error.stack
-            )
-          }
-        }
-      )
-    },
-  }
-}
-
 module.exports = {
   context: pathFromRoot(''),
   mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
@@ -78,7 +47,4 @@ module.exports = {
     ],
   },
   externals: [nodeExternals()],
-  plugins: slsw.lib.webpack.isLocal
-    ? []
-    : [createExtractTarballPlugin({archive: sharpTarball, to: outputPath})],
 }

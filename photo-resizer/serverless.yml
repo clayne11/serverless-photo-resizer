@@ -39,8 +39,6 @@ functions:
 
 custom:
   webpack:
-    packager: 'yarn'
-    packagerOptions: {}
     includeModules:
       forceExclude:
         - aws-sdk
