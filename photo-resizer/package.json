@@ -5,7 +5,8 @@
   "main": "src/code/handler.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "sls deploy"
+    "deploy": "serverless deploy",
+    "build:sharp": "cd lambda-sharp && docker run -v \"$PWD\":/var/task lambci/lambda:build-nodejs8.10 ./build.sh"
   },
   "dependencies": {
     "ramda": "^0.25.0",
@@ -16,18 +17,16 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-typescript": "^7.1.0",
     "@types/aws-lambda": "8.10.1",
-    "@types/gm": "^1.18.0",
     "@types/node": "^8.0.57",
     "@types/ramda": "^0.25.38",
     "@types/sharp": "^0.17.10",
     "aws-sdk": "^2.311.0",
     "babel-loader": "^8.0.2",
     "babel-plugin-ramda": "^1.6.3",
-    "gm": "^1.23.1",
+    "decompress": "^4.2.0",
     "serverless": "^1.30.3",
     "serverless-webpack": "^5.1.1",
     "source-map-support": "^0.5.6",
-    "ts-loader": "^4.2.0",
     "typescript": "^2.9.2",
     "webpack": "^4.5.0"
   },

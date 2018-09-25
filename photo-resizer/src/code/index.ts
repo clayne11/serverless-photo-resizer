@@ -1,1 +1,1 @@
-export {resizePhoto} from './resizePhoto'
+export {resizeImage} from './resizeImage'

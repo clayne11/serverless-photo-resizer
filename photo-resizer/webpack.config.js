@@ -1,7 +1,34 @@
 const path = require('path')
 const slsw = require('serverless-webpack')
+const decompress = require('decompress')
 
 const pathFromRoot = curPath => path.join(__dirname, curPath)
+
+const SHARP_VERSION = '0.20.8'
+const sharpTarball = path.join(
+  __dirname,
+  `lambda-sharp/tarballs/sharp-${SHARP_VERSION}-aws-lambda-linux-x64-node-8.10.0.tar.gz`
+)
+const webpackDir = path.join(__dirname, '.webpack/')
+
+function ExtractTarballPlugin(archive, to) {
+  return {
+    apply: compiler => {
+      compiler.plugin('emit', (_compilation, callback) => {
+        decompress(path.resolve(archive), path.resolve(to))
+          .then(() => callback())
+          .catch(error =>
+            console.error(
+              'Unable to extract archive ',
+              archive,
+              to,
+              error.stack
+            )
+          )
+      })
+    },
+  }
+}
 
 module.exports = {
   context: pathFromRoot(''),
@@ -44,4 +71,6 @@ module.exports = {
       {test: /\.tsx?$/, loader: 'babel-loader'},
     ],
   },
+  externals: ['sharp', 'aws-sdk'],
+  plugins: [new ExtractTarballPlugin(sharpTarball, webpackDir)],
 }

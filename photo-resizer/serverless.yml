@@ -11,7 +11,7 @@ package:
 provider:
   name: aws
   runtime: nodejs8.10
-  memorySize: 1024
+  memorySize: 1536
   timeout: 30
 
   environment:
@@ -26,8 +26,8 @@ provider:
         - Fn::Join: ['', [Fn::GetAtt: [PhotoBucket, Arn], '/*']]
 
 functions:
-  resizePhoto:
-    handler: src/code/index.resizePhoto
+  resizeImage:
+    handler: src/code/index.resizeImage
     events:
       - http:
           path: resize/{key}
@@ -44,7 +44,7 @@ custom:
     includeModules:
       forceExclude:
         - aws-sdk
-        - gm
+        - sharp
 
 resources:
   # S3
